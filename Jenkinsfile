@@ -70,95 +70,89 @@ pipeline {
 
     post {
         success {
-            node {
-                sh '''
-                    JSON_PAYLOAD=$(jq -n \
-                      --arg job "${JOB_NAME:-Unknown}" \
-                      --arg build "${BUILD_NUMBER:-0}" \
-                      --arg version "${APP_VERSION:-N/A}" \
-                      --arg author "${GIT_AUTHOR:-Unknown}" \
-                      --arg repo "${GIT_REPO:-Unknown}" \
-                      --arg branch "${GIT_BRANCH_NAME:-Unknown}" \
-                      --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
-                      --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
-                      --arg ts "${BUILD_TS:-Unknown}" \
-                      '{
-                        embeds: [{
-                          title: "✅ Build Succeeded",
-                          color: 3066993,
-                          fields: [
-                            {name: "Job", value: $job, inline: true},
-                            {name: "Build", value: ("#" + $build), inline: true},
-                            {name: "Version", value: $version, inline: true},
-                            {name: "Status", value: "SUCCESS", inline: true},
-                            {name: "Time", value: $ts, inline: true},
-                            {name: "👤 Author", value: $author},
-                            {name: "📦 Repo", value: $repo},
-                            {name: "🌿 Branch", value: $branch},
-                            {name: "🔢 Commit", value: $commit},
-                            {name: "📝 Commit Message", value: $msg}
-                          ],
-                          footer: {
-                            text: "Jenkins CI"
-                          }
-                        }]
-                      }')
+            sh '''
+                JSON_PAYLOAD=$(jq -n \
+                  --arg job "${JOB_NAME:-Unknown}" \
+                  --arg build "${BUILD_NUMBER:-0}" \
+                  --arg version "${APP_VERSION:-N/A}" \
+                  --arg author "${GIT_AUTHOR:-Unknown}" \
+                  --arg repo "${GIT_REPO:-Unknown}" \
+                  --arg branch "${GIT_BRANCH_NAME:-Unknown}" \
+                  --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
+                  --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
+                  --arg ts "${BUILD_TS:-Unknown}" \
+                  '{
+                    embeds: [{
+                      title: "✅ Build Succeeded",
+                      color: 3066993,
+                      fields: [
+                        {name: "Job", value: $job, inline: true},
+                        {name: "Build", value: ("#" + $build), inline: true},
+                        {name: "Version", value: $version, inline: true},
+                        {name: "Status", value: "SUCCESS", inline: true},
+                        {name: "Time", value: $ts, inline: true},
+                        {name: "👤 Author", value: $author},
+                        {name: "📦 Repo", value: $repo},
+                        {name: "🌿 Branch", value: $branch},
+                        {name: "🔢 Commit", value: $commit},
+                        {name: "📝 Commit Message", value: $msg}
+                      ],
+                      footer: {
+                        text: "Jenkins CI"
+                      }
+                    }]
+                  }')
 
-                    curl -sS -X POST \
-                      -H "Content-Type: application/json" \
-                      -d "$JSON_PAYLOAD" \
-                      "$DISCORD_WEBHOOK_URL"
-                '''
-            }
+                curl -sS -X POST \
+                  -H "Content-Type: application/json" \
+                  -d "$JSON_PAYLOAD" \
+                  "$DISCORD_WEBHOOK_URL"
+            '''
         }
 
         failure {
-            node {
-                sh '''
-                    JSON_PAYLOAD=$(jq -n \
-                      --arg job "${JOB_NAME:-Unknown}" \
-                      --arg build "${BUILD_NUMBER:-0}" \
-                      --arg version "${APP_VERSION:-N/A}" \
-                      --arg author "${GIT_AUTHOR:-Unknown}" \
-                      --arg repo "${GIT_REPO:-Unknown}" \
-                      --arg branch "${GIT_BRANCH_NAME:-Unknown}" \
-                      --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
-                      --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
-                      --arg ts "${BUILD_TS:-Unknown}" \
-                      '{
-                        embeds: [{
-                          title: "❌ Build Failed",
-                          color: 15158332,
-                          fields: [
-                            {name: "Job", value: $job, inline: true},
-                            {name: "Build", value: ("#" + $build), inline: true},
-                            {name: "Version", value: $version, inline: true},
-                            {name: "Status", value: "FAILED", inline: true},
-                            {name: "Time", value: $ts, inline: true},
-                            {name: "👤 Author", value: $author},
-                            {name: "📦 Repo", value: $repo},
-                            {name: "🌿 Branch", value: $branch},
-                            {name: "🔢 Commit", value: $commit},
-                            {name: "📝 Commit Message", value: $msg}
-                          ],
-                          footer: {
-                            text: "Jenkins CI"
-                          }
-                        }]
-                      }')
+            sh '''
+                JSON_PAYLOAD=$(jq -n \
+                  --arg job "${JOB_NAME:-Unknown}" \
+                  --arg build "${BUILD_NUMBER:-0}" \
+                  --arg version "${APP_VERSION:-N/A}" \
+                  --arg author "${GIT_AUTHOR:-Unknown}" \
+                  --arg repo "${GIT_REPO:-Unknown}" \
+                  --arg branch "${GIT_BRANCH_NAME:-Unknown}" \
+                  --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
+                  --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
+                  --arg ts "${BUILD_TS:-Unknown}" \
+                  '{
+                    embeds: [{
+                      title: "❌ Build Failed",
+                      color: 15158332,
+                      fields: [
+                        {name: "Job", value: $job, inline: true},
+                        {name: "Build", value: ("#" + $build), inline: true},
+                        {name: "Version", value: $version, inline: true},
+                        {name: "Status", value: "FAILED", inline: true},
+                        {name: "Time", value: $ts, inline: true},
+                        {name: "👤 Author", value: $author},
+                        {name: "📦 Repo", value: $repo},
+                        {name: "🌿 Branch", value: $branch},
+                        {name: "🔢 Commit", value: $commit},
+                        {name: "📝 Commit Message", value: $msg}
+                      ],
+                      footer: {
+                        text: "Jenkins CI"
+                      }
+                    }]
+                  }')
 
-                    curl -sS -X POST \
-                      -H "Content-Type: application/json" \
-                      -d "$JSON_PAYLOAD" \
-                      "$DISCORD_WEBHOOK_URL"
-                '''
-            }
+                curl -sS -X POST \
+                  -H "Content-Type: application/json" \
+                  -d "$JSON_PAYLOAD" \
+                  "$DISCORD_WEBHOOK_URL"
+            '''
         }
 
         always {
-            node {
-                cleanWs()
-            }
+            cleanWs()
         }
     }
 }
