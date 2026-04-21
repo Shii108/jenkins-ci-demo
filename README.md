@@ -12,3 +12,6 @@ This is a simple demo app for Jenkins CI pipeline.
 chmod +x app.sh test.sh
 ./app.sh
 ./test.sh
+
+
+## Poll SCM added
