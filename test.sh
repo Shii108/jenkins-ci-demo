@@ -17,3 +17,6 @@ else
     echo "FAIL: Output missing hostname"
     exit 1
 fi
+
+echo "Deliberate failure for Jenkins demo"
+exit 1
