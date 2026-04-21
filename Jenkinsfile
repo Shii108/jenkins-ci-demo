@@ -4,7 +4,7 @@ pipeline {
     environment {
         APP_VERSION = '1.0.0'
         BUILD_TS = "${new Date().format('dd/MM/yyyy HH:mm:ss')}"
-        DISCORD_WEBHOOK_URL = credentials('https://discord.com/api/webhooks/1491988177567744151/I1IO7GeK-avC-XaPkxGkPAOqa7J2cLkbSQDIFeB-Le9EXPK2LgQ-2x-M_heAjbPcvRE3')
+        DISCORD_WEBHOOK_URL = credentials('https://discord.com/api/webhooks/1496207988690653395/Xh0QdeKE3Bw8aKQ2c3AdvJxGi40rrmN1NU07yRZTXaAyhJ1UYlJ-ab49hN2mRnDaXt2L')
     }
 
     stages {
@@ -70,89 +70,95 @@ pipeline {
 
     post {
         success {
-            sh '''
-                JSON_PAYLOAD=$(jq -n \
-                  --arg job "${JOB_NAME:-Unknown}" \
-                  --arg build "${BUILD_NUMBER:-0}" \
-                  --arg version "${APP_VERSION:-N/A}" \
-                  --arg author "${GIT_AUTHOR:-Unknown}" \
-                  --arg repo "${GIT_REPO:-Unknown}" \
-                  --arg branch "${GIT_BRANCH_NAME:-Unknown}" \
-                  --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
-                  --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
-                  --arg ts "${BUILD_TS:-Unknown}" \
-                  '{
-                    embeds: [{
-                      title: "✅ Build Succeeded",
-                      color: 3066993,
-                      fields: [
-                        {name: "Job", value: $job, inline: true},
-                        {name: "Build", value: ("#" + $build), inline: true},
-                        {name: "Version", value: $version, inline: true},
-                        {name: "Status", value: "SUCCESS", inline: true},
-                        {name: "Time", value: $ts, inline: true},
-                        {name: "👤 Author", value: $author, inline: false},
-                        {name: "📦 Repo", value: $repo, inline: false},
-                        {name: "🌿 Branch", value: $branch, inline: false},
-                        {name: "🔢 Commit", value: $commit, inline: false},
-                        {name: "📝 Commit Message", value: $msg, inline: false}
-                      ],
-                      footer: {
-                        text: "Jenkins CI"
-                      }
-                    }]
-                  }')
+            node {
+                sh '''
+                    JSON_PAYLOAD=$(jq -n \
+                      --arg job "${JOB_NAME:-Unknown}" \
+                      --arg build "${BUILD_NUMBER:-0}" \
+                      --arg version "${APP_VERSION:-N/A}" \
+                      --arg author "${GIT_AUTHOR:-Unknown}" \
+                      --arg repo "${GIT_REPO:-Unknown}" \
+                      --arg branch "${GIT_BRANCH_NAME:-Unknown}" \
+                      --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
+                      --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
+                      --arg ts "${BUILD_TS:-Unknown}" \
+                      '{
+                        embeds: [{
+                          title: "✅ Build Succeeded",
+                          color: 3066993,
+                          fields: [
+                            {name: "Job", value: $job, inline: true},
+                            {name: "Build", value: ("#" + $build), inline: true},
+                            {name: "Version", value: $version, inline: true},
+                            {name: "Status", value: "SUCCESS", inline: true},
+                            {name: "Time", value: $ts, inline: true},
+                            {name: "👤 Author", value: $author},
+                            {name: "📦 Repo", value: $repo},
+                            {name: "🌿 Branch", value: $branch},
+                            {name: "🔢 Commit", value: $commit},
+                            {name: "📝 Commit Message", value: $msg}
+                          ],
+                          footer: {
+                            text: "Jenkins CI"
+                          }
+                        }]
+                      }')
 
-                curl -sS -X POST \
-                  -H "Content-Type: application/json" \
-                  -d "$JSON_PAYLOAD" \
-                  "$DISCORD_WEBHOOK_URL"
-            '''
+                    curl -sS -X POST \
+                      -H "Content-Type: application/json" \
+                      -d "$JSON_PAYLOAD" \
+                      "$DISCORD_WEBHOOK_URL"
+                '''
+            }
         }
 
         failure {
-            sh '''
-                JSON_PAYLOAD=$(jq -n \
-                  --arg job "${JOB_NAME:-Unknown}" \
-                  --arg build "${BUILD_NUMBER:-0}" \
-                  --arg version "${APP_VERSION:-N/A}" \
-                  --arg author "${GIT_AUTHOR:-Unknown}" \
-                  --arg repo "${GIT_REPO:-Unknown}" \
-                  --arg branch "${GIT_BRANCH_NAME:-Unknown}" \
-                  --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
-                  --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
-                  --arg ts "${BUILD_TS:-Unknown}" \
-                  '{
-                    embeds: [{
-                      title: "❌ Build Failed",
-                      color: 15158332,
-                      fields: [
-                        {name: "Job", value: $job, inline: true},
-                        {name: "Build", value: ("#" + $build), inline: true},
-                        {name: "Version", value: $version, inline: true},
-                        {name: "Status", value: "FAILED", inline: true},
-                        {name: "Time", value: $ts, inline: true},
-                        {name: "👤 Author", value: $author, inline: false},
-                        {name: "📦 Repo", value: $repo, inline: false},
-                        {name: "🌿 Branch", value: $branch, inline: false},
-                        {name: "🔢 Commit", value: $commit, inline: false},
-                        {name: "📝 Commit Message", value: $msg, inline: false}
-                      ],
-                      footer: {
-                        text: "Jenkins CI"
-                      }
-                    }]
-                  }')
+            node {
+                sh '''
+                    JSON_PAYLOAD=$(jq -n \
+                      --arg job "${JOB_NAME:-Unknown}" \
+                      --arg build "${BUILD_NUMBER:-0}" \
+                      --arg version "${APP_VERSION:-N/A}" \
+                      --arg author "${GIT_AUTHOR:-Unknown}" \
+                      --arg repo "${GIT_REPO:-Unknown}" \
+                      --arg branch "${GIT_BRANCH_NAME:-Unknown}" \
+                      --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
+                      --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
+                      --arg ts "${BUILD_TS:-Unknown}" \
+                      '{
+                        embeds: [{
+                          title: "❌ Build Failed",
+                          color: 15158332,
+                          fields: [
+                            {name: "Job", value: $job, inline: true},
+                            {name: "Build", value: ("#" + $build), inline: true},
+                            {name: "Version", value: $version, inline: true},
+                            {name: "Status", value: "FAILED", inline: true},
+                            {name: "Time", value: $ts, inline: true},
+                            {name: "👤 Author", value: $author},
+                            {name: "📦 Repo", value: $repo},
+                            {name: "🌿 Branch", value: $branch},
+                            {name: "🔢 Commit", value: $commit},
+                            {name: "📝 Commit Message", value: $msg}
+                          ],
+                          footer: {
+                            text: "Jenkins CI"
+                          }
+                        }]
+                      }')
 
-                curl -sS -X POST \
-                  -H "Content-Type: application/json" \
-                  -d "$JSON_PAYLOAD" \
-                  "$DISCORD_WEBHOOK_URL"
-            '''
+                    curl -sS -X POST \
+                      -H "Content-Type: application/json" \
+                      -d "$JSON_PAYLOAD" \
+                      "$DISCORD_WEBHOOK_URL"
+                '''
+            }
         }
 
         always {
-            cleanWs()
+            node {
+                cleanWs()
+            }
         }
     }
 }
