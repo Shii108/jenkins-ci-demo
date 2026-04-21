@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         APP_VERSION = '1.0.0'
-        DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1496207988690653395/Xh0QdeKE3Bw8aKQ2c3AdvJxGi40rrmN1NU07yRZTXaAyhJ1UYlJ-ab49hN2mRnDaXt2L'
+        DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1491988177567744151/I1IO7GeK-avC-XaPkxGkPAOqa7J2cLkbSQDIFeB-Le9EXPK2LgQ-2x-M_heAjbPcvRE3'
     }
 
     stages {
