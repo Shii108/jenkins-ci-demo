@@ -23,8 +23,8 @@ pipeline {
                         returnStdout: true
                     ).trim()
 
-                    env.GIT_BRANCH_NAME = sh(
-                        script: "git branch --show-current",
+                    env.GIT_BRANCH_NAME = env.BRANCH_NAME ?: env.GIT_BRANCH ?: sh(
+                        script: "git rev-parse --abbrev-ref HEAD",
                         returnStdout: true
                     ).trim()
 
@@ -82,22 +82,24 @@ pipeline {
                   --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
                   --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
                   --arg ts "${BUILD_TS:-Unknown}" \
+                  --arg buildUrl "${BUILD_URL:-}" \
                   '{
                     embeds: [{
                       title: "✅ Build Succeeded",
                       color: 3066993,
-                      fields: [
-                        {name: "Job", value: $job, inline: true},
-                        {name: "Build", value: ("#" + $build), inline: true},
-                        {name: "Version", value: $version, inline: true},
-                        {name: "Status", value: "SUCCESS", inline: true},
-                        {name: "Time", value: $ts, inline: true},
-                        {name: "👤 Author", value: $author},
-                        {name: "📦 Repo", value: $repo},
-                        {name: "🌿 Branch", value: $branch},
-                        {name: "🔢 Commit", value: $commit},
-                        {name: "📝 Commit Message", value: $msg}
-                      ],
+                      description: (
+                        "**Job:** " + $job + "\n" +
+                        "**Build:** #" + $build + "\n" +
+                        "**Version:** " + $version + "\n" +
+                        "**Status:** SUCCESS\n" +
+                        "**Time:** " + $ts + "\n\n" +
+                        "👤 **Author:** " + $author + "\n" +
+                        "📦 **Repo:** " + $repo + "\n" +
+                        "🌿 **Branch:** " + $branch + "\n" +
+                        "🔢 **Commit:** " + $commit + "\n" +
+                        "📝 **Commit_Message:** " + $msg + "\n\n" +
+                        "[View Build Logs](" + $buildUrl + ")"
+                      ),
                       footer: {
                         text: "Jenkins CI"
                       }
@@ -123,22 +125,24 @@ pipeline {
                   --arg commit "${GIT_COMMIT_SHORT:-Unknown}" \
                   --arg msg "${GIT_COMMIT_MSG:-No commit message}" \
                   --arg ts "${BUILD_TS:-Unknown}" \
+                  --arg buildUrl "${BUILD_URL:-}" \
                   '{
                     embeds: [{
                       title: "❌ Build Failed",
                       color: 15158332,
-                      fields: [
-                        {name: "Job", value: $job, inline: true},
-                        {name: "Build", value: ("#" + $build), inline: true},
-                        {name: "Version", value: $version, inline: true},
-                        {name: "Status", value: "FAILED", inline: true},
-                        {name: "Time", value: $ts, inline: true},
-                        {name: "👤 Author", value: $author},
-                        {name: "📦 Repo", value: $repo},
-                        {name: "🌿 Branch", value: $branch},
-                        {name: "🔢 Commit", value: $commit},
-                        {name: "📝 Commit Message", value: $msg}
-                      ],
+                      description: (
+                        "**Job:** " + $job + "\n" +
+                        "**Build:** #" + $build + "\n" +
+                        "**Version:** " + $version + "\n" +
+                        "**Status:** FAILED\n" +
+                        "**Time:** " + $ts + "\n\n" +
+                        "👤 **Author:** " + $author + "\n" +
+                        "📦 **Repo:** " + $repo + "\n" +
+                        "🌿 **Branch:** " + $branch + "\n" +
+                        "🔢 **Commit:** " + $commit + "\n" +
+                        "📝 **Commit_Message:** " + $msg + "\n\n" +
+                        "[View Build Logs](" + $buildUrl + ")"
+                      ),
                       footer: {
                         text: "Jenkins CI"
                       }
