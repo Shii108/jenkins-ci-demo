@@ -18,5 +18,3 @@ else
     exit 1
 fi
 
-echo "Deliberate failure for Jenkins demo"
-exit 1
