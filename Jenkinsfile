@@ -3,8 +3,7 @@ pipeline {
 
     environment {
         APP_VERSION = '1.0.0'
-        BUILD_TS = "${new Date().format('dd/MM/yyyy HH:mm:ss')}"
-        DISCORD_WEBHOOK_URL = credentials('https://discord.com/api/webhooks/1496207988690653395/Xh0QdeKE3Bw8aKQ2c3AdvJxGi40rrmN1NU07yRZTXaAyhJ1UYlJ-ab49hN2mRnDaXt2L')
+        DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1496207988690653395/Xh0QdeKE3Bw8aKQ2c3AdvJxGi40rrmN1NU07yRZTXaAyhJ1UYlJ-ab49hN2mRnDaXt2L'
     }
 
     stages {
@@ -17,6 +16,8 @@ pipeline {
         stage('Git Info') {
             steps {
                 script {
+                    env.BUILD_TS = new Date().format('dd/MM/yyyy HH:mm:ss')
+
                     env.GIT_COMMIT_SHORT = sh(
                         script: "git rev-parse --short HEAD",
                         returnStdout: true
